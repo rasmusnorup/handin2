@@ -57,7 +57,18 @@ class FeedForwardModel(TfModel):
         (Don't change the variable names)
         """
         ### YOUR CODE HERE
-        dwlih
+        with tf.Graph.as_default():
+            input_placeholder = tf.placeholder(tf.float32, shape = [None, Config().n_features])
+            labels_placeholder = tf.placeholder(tf.int32, shape = [None])
+            dropout_placeholder = tf.placeholder(tf.float32)
+            weight_decay_placeholder = tf.placeholder(tf.float32)
+
+            self.input_placeholder = input_placeholder
+            self.labels_placeholder = labels_placeholder
+            self.dropout_placeholder = dropout_placeholder
+            self.weight_decay_placeholder = tf.placeholder
+
+
         ### END CODE
 
     def create_feed_dict(self, inputs_batch, labels_batch=None, weight_decay = 0, dropout=1):
@@ -84,6 +95,7 @@ class FeedForwardModel(TfModel):
 
         feed_dict = {}
         ### YOUR CODE HERE
+        
         ### END CODE
         return feed_dict
 
