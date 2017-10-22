@@ -86,32 +86,58 @@ if __name__=="__main__":
     if args.poly2:
         print('running poly 2 svm')
         ### YOUR CODE HERE
-        clf = svm.SVC(kernel='poly',degree=2,C=1)
+        clf = svm.SVC(kernel='poly')
 
         parameterspoly2 = {
             'C': [1, 10, 100],
             'degree': [2],
             'coef0': [0,0.1,1]
             }
-        clf= GridSearchCV(clf, parameterspoly2, n_jobs=-1)
+        clf= GridSearchCV(clf, parameterspoly2)
         clf.fit(X,Y)
         clf = clf = clf.cv_results_
         C = clf['param_C']
+        deg = clf['param_degree']
+        coef = clf['param_coef0']
         test_scores = clf['mean_test_score']
         train_scores = clf['mean_train_score']
         print("C:\t\t", C)
+        print("Deg:\t\t",deg)
+        print("coef0\t\t",coef)
         print("test_acc:\t", test_scores)
         print("train_acc:\t", train_scores)
 
         dataframe = pd.DataFrame(clf)
-        relevant = dataframe.filter(['mean_test_score', 'mean_train_score', 'std_test_score', 'std_train_score', 'param_C', 'mean_fit_time']).sort_values(['mean_test_score'])
+        relevant = dataframe.filter(['mean_test_score', 'mean_train_score', 'std_test_score', 'std_train_score', 'param_C','param_degree','param_coef0', 'mean_fit_time']).sort_values(['mean_test_score'])
         display(relevant)
         ### END CODE
     if args.poly3:
         print('running poly 3 svm')
         #### YOUR CODE HERE
-        clf = svm.SVC(kernel='poly' , degree=3 ,C=1)
+        clf = svm.SVC(kernel='poly')
+
+        parameterspoly2 = {
+            'C': [1, 10, 100],
+            'degree': [3],
+            'coef0': [0,0.1,1]
+            }
+        clf= GridSearchCV(clf, parameterspoly2)
         clf.fit(X,Y)
+        clf = clf = clf.cv_results_
+        C = clf['param_C']
+        deg = clf['param_degree']
+        coef = clf['param_coef0']
+        test_scores = clf['mean_test_score']
+        train_scores = clf['mean_train_score']
+        print("C:\t\t", C)
+        print("Deg:\t\t",deg)
+        print("coef0\t\t",coef)
+        print("test_acc:\t", test_scores)
+        print("train_acc:\t", train_scores)
+
+        dataframe = pd.DataFrame(clf)
+        relevant = dataframe.filter(['mean_test_score', 'mean_train_score', 'std_test_score', 'std_train_score', 'param_C','param_degree','param_coef0', 'mean_fit_time']).sort_values(['mean_test_score'])
+        display(relevant)
         ### END CODE
     if args.rbf:
         print('running rbf svm')
@@ -121,7 +147,7 @@ if __name__=="__main__":
             'C': [1, 10, 100],
             'gamma': [0.01, 0.1, 1]
             }
-        gs_clf = GridSearchCV(clf, parameters, n_jobs=-1)
+        gs_clf = GridSearchCV(clf, parameters)
         gs_clf = gs_clf.fit(X, Y)
         gs_clf = gs_clf.cv_results_
         C = gs_clf['param_C']
