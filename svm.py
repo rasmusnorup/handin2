@@ -60,30 +60,29 @@ if __name__=="__main__":
     parser.add_argument('-poly3', action='store_true', default=False)
     parser.add_argument('-rbf', action='store_true', default=False)
     args = parser.parse_args()
+    X = labs[0:100]
+    Y = labs[0:100]
     if args.lin:
         print('running linear svm')
         ### YOUR CODE HERE
         clf = svm.SVC(kernel='linear',C=1)
-        clf.fit(digs,labs)
+        clf.fit(X,Y)
         ### END CODE
     if args.poly2:
         print('running poly 2 svm')
         ### YOUR CODE HERE
         clf = svm.SVC(kernel='poly',degree=2,C=1)
-        clf.fit(digs,labs)
+        clf.fit(X,Y)
         ### END CODE
     if args.poly3:
         print('running poly 3 svm')
         #### YOUR CODE HERE
         clf = svm.SVC(kernel='poly' , degree=3 ,C=1)
-        clf.fit(digs,labs)
+        clf.fit(X,Y)
         ### END CODE
     if args.rbf:
         print('running rbf svm')
         ### YOUR CODE HERE
-        clf = svm.SVC(kernel='rbf',C=1)
-        clf.fit(digs,labs)
-
         clf = svm.SVC(kernel='rbf')
         parameters = {
             'C': [1, 10, 100],
