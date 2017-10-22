@@ -7,7 +7,7 @@ class Config(object):
 
     The config class is used to store various hyperparameters and dataset
     information parameters. Model objects are passed a Config() object at
-    instantiation. 
+    instantiation.
     """
     n_features = 28*28
     n_classes = 10
@@ -17,11 +17,11 @@ class Config(object):
     batch_size = 32
     n_epochs = 5
     lr = 0.001
-    
-    def __init__(self, name_suffix=None, **kwargs):        
+
+    def __init__(self, name_suffix=None, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
-        
+
         # overwrite values and set paths
         self.name = 'nn_h{0}'.format(self.hidden_size)
         if name_suffix is not None:
@@ -31,9 +31,9 @@ class Config(object):
             os.makedirs(weights_path)
         self.weights_path = weights_path
         self.weights_file = os.path.join(self.weights_path, "{0}.weight".format(self.name))
-        
+
 class FeedForwardModel(TfModel):
-    
+
     def add_placeholders(self):
         """Generates placeholder variables to represent the input tensors (the input data)
 
@@ -57,6 +57,7 @@ class FeedForwardModel(TfModel):
         (Don't change the variable names)
         """
         ### YOUR CODE HERE
+        dwlih
         ### END CODE
 
     def create_feed_dict(self, inputs_batch, labels_batch=None, weight_decay = 0, dropout=1):
@@ -68,7 +69,7 @@ class FeedForwardModel(TfModel):
                 <placeholder>: <tensor of values to be passed for placeholder>,
                 ....
         }
-        The keys for the feed_dict should be a subset of the placeholder 
+        The keys for the feed_dict should be a subset of the placeholder
         tensors created in add_placeholders. When an argument is None, don't add it to the feed_dict.
         (We only add labels when we train)
 
@@ -80,7 +81,7 @@ class FeedForwardModel(TfModel):
         Returns:
             feed_dict: dict, mapping from placeholders to values.
         """
-        
+
         feed_dict = {}
         ### YOUR CODE HERE
         ### END CODE
@@ -96,9 +97,9 @@ class FeedForwardModel(TfModel):
         the add_loss_op function, which improves efficiency because we can use
         build-in tensorflow function tf.nn.softmax_cross_entropy_with_logits
 
-        Before using the Variables, W, b1, U, b2 they must be defined and initialized. 
+        Before using the Variables, W, b1, U, b2 they must be defined and initialized.
 
-        Use tf.contrib.xavier_initializer to initialize W and U 
+        Use tf.contrib.xavier_initializer to initialize W and U
         We have already initialized W for you so you can see how it is done.
         You can initialize b1 and b2 with zeros (tf.zeros)
 
@@ -107,8 +108,8 @@ class FeedForwardModel(TfModel):
                     b1: (hidden_size) - shape hidden_size, (like the numpy vectors that were not matrices)
                     U:  (hidden_size, n_classes)
                     b2: (n_classes) - shape hidden_size, (like the numpy vectors that were not matrices)
-        
-        Note that tf.nn.dropout takes the keep probability (1 - p_drop) as an argument. 
+
+        Note that tf.nn.dropout takes the keep probability (1 - p_drop) as an argument.
         The keep probability should be set to the value of self.dropout_placeholder
 
         Add these placeholders to self as the instance variables (need them for weigth decay)
@@ -131,7 +132,7 @@ class FeedForwardModel(TfModel):
         """Adds Ops for the loss function to the computational graph.
         In this case we are using cross entropy loss + weight_decay
         The loss should be averaged over all examples in the current minibatch.
-        
+
         You should use tf.nn.sparse_softmax_cross_entropy_with_logits to simplify your
         implementation. You might find tf.reduce_mean useful.
 
@@ -152,7 +153,7 @@ class FeedForwardModel(TfModel):
 
         Creates an optimizer and applies the gradients to all trainable variables.
         The Op returned by this function is what must be passed to the
-        `sess.run()` call to cause the model to train. 
+        `sess.run()` call to cause the model to train.
 
         See https://www.tensorflow.org/api_guides/python/train#Optimizer
         for more information or the tensorflow guide for more information.
@@ -171,20 +172,17 @@ class FeedForwardModel(TfModel):
 
     def predict_labels_on_batch(self, session, inputs_batch):
         """ Make label predictions for the provided batch of data - helper function
-                        
+
         Should be similar to softmax predict from hand in 1
-        
+
         Args:
                session: tf.Session()
                input_batch: np.ndarray of shape (n_samples, n_features)
         Returns:
-               predicted_labels: np.ndarray of shape (n_samples,)        
+               predicted_labels: np.ndarray of shape (n_samples,)
         """
         predicted_labels = None
         logits = self.predict_on_batch(session, inputs_batch)
         predicted_labels_tensor = tf.argmax(logits, 1)
         predicted_labels =  session.run(predicted_labels_tensor)
         return predicted_labels
-    
-    
-            
