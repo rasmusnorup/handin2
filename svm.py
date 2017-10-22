@@ -69,7 +69,7 @@ if __name__=="__main__":
         parameterslinear = {
             'C': [1, 10, 100],
             }
-        clf= GridSearchCV(clf, parameterslinear, n_jobs=-1)
+        clf= GridSearchCV(clf, parameterslinear)
         clf.fit(X,Y)
         clf = clf.cv_results_
         C = clf['param_C']
