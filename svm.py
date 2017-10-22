@@ -65,8 +65,22 @@ if __name__=="__main__":
     if args.lin:
         print('running linear svm')
         ### YOUR CODE HERE
-        clf = svm.SVC(kernel='linear',C=1)
+        clf = svm.SVC(kernel='linear')
+        parameterslinear = {
+            'C': [1, 10, 100]
+            }
+        clf= GridSearchCV(clf, parameterslinear, n_jobs=-1)
         clf.fit(X,Y)
+        C = clf['param_C']
+        test_scores = clf['mean_test_score']
+        train_scores = clf['mean_train_score']
+        print("C:\t\t", C)
+        print("test_acc:\t", test_scores)
+        print("train_acc:\t", train_scores)
+
+        dataframe = pd.DataFrame(clf)
+        relevant = dataframe.filter(['mean_test_score', 'mean_train_score', 'std_test_score', 'std_train_score', 'param_C', 'mean_fit_time']).sort_values(['mean_test_score'])
+        display(relevant)
         ### END CODE
     if args.poly2:
         print('running poly 2 svm')
@@ -103,6 +117,7 @@ if __name__=="__main__":
         dataframe = pd.DataFrame(gs_clf)
         relevant = dataframe.filter(['mean_test_score', 'mean_train_score', 'std_test_score', 'std_train_score', 'param_C', 'param_gamma', 'mean_fit_time']).sort_values(['mean_test_score'])
         display(relevant)
+
 
 
         ### END CODE
