@@ -60,7 +60,7 @@ if __name__=="__main__":
     parser.add_argument('-poly3', action='store_true', default=False)
     parser.add_argument('-rbf', action='store_true', default=False)
     args = parser.parse_args()
-    X = labs[0:100]
+    X = digs[0:100]
     Y = labs[0:100]
     if args.lin:
         print('running linear svm')
