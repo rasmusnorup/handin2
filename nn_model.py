@@ -145,8 +145,12 @@ class FeedForwardModel(TfModel):
         xavier_initializer = tf.contrib.layers.xavier_initializer()
         Ushape = (self.hidden_size, self.n_classes)
         self.U = tf.Variable(xavier_initializer(Ushape))
-        
+        b1  = tf.Variable(tf.zeros(self.hidden_size))
+        b2 = tf.Variable(tf.zeros(self.n_classes))
+        h = tf.nn.relu(tf.matmul(x,W) + b1)
+        h_drop = tf.nn.dropout(h,self.dropout_placeholder)
 
+        pred = tf.matmul(h_drop, U) + b2
         ### END CODE
         return pred
 
