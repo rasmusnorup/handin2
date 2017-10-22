@@ -82,6 +82,7 @@ if __name__=="__main__":
         dataframe = pd.DataFrame(clf)
         relevant = dataframe.filter(['mean_test_score', 'mean_train_score', 'std_test_score', 'std_train_score', 'param_C', 'mean_fit_time']).sort_values(['mean_test_score'])
         display(relevant)
+        export_dataframe("lin", relevant)
         ### END CODE
     if args.poly2:
         print('running poly 2 svm')
@@ -110,18 +111,19 @@ if __name__=="__main__":
         dataframe = pd.DataFrame(clf)
         relevant = dataframe.filter(['mean_test_score', 'mean_train_score', 'std_test_score', 'std_train_score', 'param_C','param_degree','param_coef0', 'mean_fit_time']).sort_values(['mean_test_score'])
         display(relevant)
+        export_dataframe("poly2", relevant)
         ### END CODE
     if args.poly3:
         print('running poly 3 svm')
         #### YOUR CODE HERE
         clf = svm.SVC(kernel='poly')
 
-        parameterspoly2 = {
+        parameterspoly3 = {
             'C': [1, 10, 100],
             'degree': [3],
             'coef0': [0,0.1,1]
             }
-        clf= GridSearchCV(clf, parameterspoly2)
+        clf= GridSearchCV(clf, parameterspoly3)
         clf.fit(X,Y)
         clf = clf = clf.cv_results_
         C = clf['param_C']
@@ -138,6 +140,7 @@ if __name__=="__main__":
         dataframe = pd.DataFrame(clf)
         relevant = dataframe.filter(['mean_test_score', 'mean_train_score', 'std_test_score', 'std_train_score', 'param_C','param_degree','param_coef0', 'mean_fit_time']).sort_values(['mean_test_score'])
         display(relevant)
+        export_dataframe("poly3", relevant)
         ### END CODE
     if args.rbf:
         print('running rbf svm')
