@@ -95,7 +95,12 @@ class FeedForwardModel(TfModel):
 
         feed_dict = {}
         ### YOUR CODE HERE
-        
+        feed_dict = {
+        self.input_placeholder: input_batch ,
+        self.labels_placeholder: labels_batch ,
+        self.dropout_placeholder: dropout ,
+        self.weight_decay_placeholder: weight_decay
+        }
         ### END CODE
         return feed_dict
 
@@ -137,6 +142,11 @@ class FeedForwardModel(TfModel):
         self.W = tf.Variable(xavier_initializer(Wshape))
         x = self.input_placeholder
         ### YOUR CODE HERE
+        xavier_initializer = tf.contrib.layers.xavier_initializer()
+        Ushape = (self.hidden_size, self.n_classes)
+        self.U = tf.Variable(xavier_initializer(Ushape))
+        
+
         ### END CODE
         return pred
 
@@ -179,6 +189,7 @@ class FeedForwardModel(TfModel):
             train_op: The Op for training.
         """
         ### YOUR CODE HERE
+
         ### END CODE
         return train_op
 
