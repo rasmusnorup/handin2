@@ -69,7 +69,7 @@ if __name__=="__main__":
         parameterslinear = {
             'C': [1, 10, 100],
             }
-        clf= GridSearchCV(clf, parameterslinear, n_jobs=-1)
+        clf= GridSearchCV(clf, parameterslinear)
         clf.fit(X,Y)
         clf = clf.cv_results_
         C = clf['param_C']
@@ -93,7 +93,7 @@ if __name__=="__main__":
             'degree': [2],
             'coef0': [0,0.1,1]
             }
-        clf= GridSearchCV(clf, parameterspoly2, n_jobs=-1)
+        clf= GridSearchCV(clf, parameterspoly2)
         clf.fit(X,Y)
         clf = clf = clf.cv_results_
         C = clf['param_C']
@@ -121,7 +121,7 @@ if __name__=="__main__":
             'C': [1, 10, 100],
             'gamma': [0.01, 0.1, 1]
             }
-        gs_clf = GridSearchCV(clf, parameters, n_jobs=-1)
+        gs_clf = GridSearchCV(clf, parameters)
         gs_clf = gs_clf.fit(X, Y)
         gs_clf = gs_clf.cv_results_
         C = gs_clf['param_C']
