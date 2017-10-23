@@ -67,7 +67,7 @@ if __name__=="__main__":
         ### YOUR CODE HERE
         clf = svm.SVC(kernel='linear')
         parameterslinear = {
-            'C': [1, 10, 100],
+            'C': [0.01, 0.1, 1, 5, 10, 50, 100, 200, 500, 1000],
             }
         clf= GridSearchCV(clf, parameterslinear)
         clf.fit(X,Y)
