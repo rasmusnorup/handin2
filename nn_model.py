@@ -144,7 +144,6 @@ class FeedForwardModel(TfModel):
         b2 = tf.Variable(tf.zeros(self.config.n_classes))
         h = tf.nn.relu(tf.matmul(x,self.W) + b1)
         h_drop = tf.nn.dropout(h,self.dropout_placeholder)
-
         pred = tf.matmul(h_drop, self.U) + b2
         ### END CODE
         return pred
