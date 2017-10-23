@@ -91,10 +91,11 @@ class FeedForwardModel(TfModel):
         ### YOUR CODE HERE
         feed_dict = {
         self.input_placeholder: inputs_batch ,
-        self.labels_placeholder: labels_batch ,
         self.dropout_placeholder: dropout ,
         self.weight_decay_placeholder: weight_decay
         }
+        if labels_batch is not None:
+            feed_dict[self.labels_placeholder] = labels_batch
         ### END CODE
         return feed_dict
 
