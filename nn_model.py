@@ -58,7 +58,7 @@ class FeedForwardModel(TfModel):
         """
         ### YOUR CODE HERE
 
-        self.input_placeholder = tf.placeholder(tf.float32, shape = [None, Config().n_features])
+        self.input_placeholder = tf.placeholder(tf.float32, shape = [None, self.config.n_features])
         self.labels_placeholder = tf.placeholder(tf.int32, shape = [None])
         self.dropout_placeholder = tf.placeholder(tf.float32)
         self.weight_decay_placeholder = tf.placeholder(tf.float32)
@@ -165,7 +165,6 @@ class FeedForwardModel(TfModel):
             loss: A 0-d tensor (scalar)
         """
         ### YOUR CODE HERE
-
         loss = tf.reduce_mean(
         tf.nn.sparse_softmax_cross_entropy_with_logits(logits=pred, labels=self.labels_placeholder))
         reg = self.config.weight_decay * (tf.reduce_sum(tf.square(self.U)) + (tf.reduce_sum(tf.square(self.W))))
@@ -174,7 +173,7 @@ class FeedForwardModel(TfModel):
 
     def add_training_op(self, loss):
         """Sets up the training Ops.
-        
+
         Creates an optimizer and applies the gradients to all trainable variables.
         The Op returned by this function is what must be passed to the
         `sess.run()` call to cause the model to train.
@@ -191,6 +190,8 @@ class FeedForwardModel(TfModel):
             train_op: The Op for training.
         """
         ### YOUR CODE HERE
+        opt = tf.train.AdamOptimizer(self.config.lr)
+        train_op = opt.minimize(loss)
 
         ### END CODE
         return train_op
