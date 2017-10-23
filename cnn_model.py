@@ -167,6 +167,21 @@ class ConvolutionalModel(TfModel):
         xavier_init = tf.contrib.layers.xavier_initializer()
 
         ### YOUR CODE HERE
+        Ushape = (self.config.hidden_size, self.config.n_classes)
+        self.U = tf.Variable(xavier_initit(Ushape))
+        Wshape = (self.config.conv_output_size , self.config.hidden_size)
+        self.W = tf.Variable(xavier_initializer(Wshape))
+        C1 = tf.Variable(tf.zeros(self.config.conv_layers[0]))
+        C2 = tf.Variable(tf.zeros(self.config.conv_layers[1]))
+
+
+        b1  = tf.Variable(tf.zeros(self.config.conv_layers[0][3]))
+        b3 = tf.Variable(tf.zeros(self.config.hidden_size))
+        b2 = tf.Variable(tf.zeros(self.config.conv_layers[1][3]))
+        b4 = tf.Variable(tf.zeros(self.config.n_classes))
+
+        
+
         ### END CODE
         return pred
 
