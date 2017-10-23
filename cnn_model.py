@@ -168,9 +168,9 @@ class ConvolutionalModel(TfModel):
 
         ### YOUR CODE HERE
         Ushape = (self.config.hidden_size, self.config.n_classes)
-        self.U = tf.Variable(xavier_initit(Ushape))
+        self.U = tf.Variable(xavier_init(Ushape))
         Wshape = (self.config.conv_output_size , self.config.hidden_size)
-        self.W = tf.Variable(xavier_initializer(Wshape))
+        self.W = tf.Variable(xavier_init(Wshape))
         C1 = tf.Variable(tf.zeros(self.config.conv_layers[0]))
         C2 = tf.Variable(tf.zeros(self.config.conv_layers[1]))
 
@@ -180,7 +180,12 @@ class ConvolutionalModel(TfModel):
         b2 = tf.Variable(tf.zeros(self.config.conv_layers[1][3]))
         b4 = tf.Variable(tf.zeros(self.config.n_classes))
 
-        
+        l1 = max_pool(Relu(conv(x, C1)))
+        l2 = max_pool(Relu(conv(l1, C2)))
+        f = flatten(c2) - make into  [-1, self.config.conv_output_size] shape
+        h = Relu(fW + b3) - hidden layer
+        h_drop = Dropout(h, dropout_rate) - use dropout
+        pred = h_dropU + b4 - compute output layer
 
         ### END CODE
         return pred
