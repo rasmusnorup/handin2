@@ -57,16 +57,13 @@ class FeedForwardModel(TfModel):
         (Don't change the variable names)
         """
         ### YOUR CODE HERE
-        with tf.Graph.as_default():
-            input_placeholder = tf.placeholder(tf.float32, shape = [None, Config().n_features])
-            labels_placeholder = tf.placeholder(tf.int32, shape = [None])
-            dropout_placeholder = tf.placeholder(tf.float32)
-            weight_decay_placeholder = tf.placeholder(tf.float32)
 
-            self.input_placeholder = input_placeholder
-            self.labels_placeholder = labels_placeholder
-            self.dropout_placeholder = dropout_placeholder
-            self.weight_decay_placeholder = tf.placeholder
+        self.input_placeholder = tf.placeholder(tf.float32, shape = [None, Config().n_features])
+        self.labels_placeholder = tf.placeholder(tf.int32, shape = [None])
+        self.dropout_placeholder = tf.placeholder(tf.float32)
+        self.weight_decay_placeholder = tf.placeholder(tf.float32)
+
+
 
 
         ### END CODE
@@ -96,7 +93,7 @@ class FeedForwardModel(TfModel):
         feed_dict = {}
         ### YOUR CODE HERE
         feed_dict = {
-        self.input_placeholder: input_batch ,
+        self.input_placeholder: inputs_batch ,
         self.labels_placeholder: labels_batch ,
         self.dropout_placeholder: dropout ,
         self.weight_decay_placeholder: weight_decay
@@ -143,14 +140,14 @@ class FeedForwardModel(TfModel):
         x = self.input_placeholder
         ### YOUR CODE HERE
         xavier_initializer = tf.contrib.layers.xavier_initializer()
-        Ushape = (self.hidden_size, self.n_classes)
+        Ushape = (self.config.hidden_size, self.config.n_classes)
         self.U = tf.Variable(xavier_initializer(Ushape))
-        b1  = tf.Variable(tf.zeros(self.hidden_size))
-        b2 = tf.Variable(tf.zeros(self.n_classes))
-        h = tf.nn.relu(tf.matmul(x,W) + b1)
+        b1  = tf.Variable(tf.zeros(self.config.hidden_size))
+        b2 = tf.Variable(tf.zeros(self.config.n_classes))
+        h = tf.nn.relu(tf.matmul(x,self.W) + b1)
         h_drop = tf.nn.dropout(h,self.dropout_placeholder)
 
-        pred = tf.matmul(h_drop, U) + b2
+        pred = tf.matmul(h_drop, self.U) + b2
         ### END CODE
         return pred
 
@@ -171,6 +168,7 @@ class FeedForwardModel(TfModel):
             loss: A 0-d tensor (scalar)
         """
         ### YOUR CODE HERE
+
         ### END CODE
         return loss + reg
 
