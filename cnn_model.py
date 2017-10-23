@@ -19,10 +19,11 @@ class Config(object):
     # The input is grayscale so the first layer has only one channel. For rgb color images there would be 3 for example.
     conv_layers = [(5, 5, 1, 32), (5, 5, 32, 64)]
     pool_sizes = [2, 2] # only use square pools i.e. t x t
-    # compute the output size of the convolutional layers i.e. how many values do we get back after the two steps of convolution and pooling.    
+    # compute the output size of the convolutional layers i.e. how many values do we get back after the two steps of convolution and pooling.
     conv_output_size = int(0)
-    
-    ### YOUR CODE HERE 
+
+    ### YOUR CODE HERE
+
     ### END CODE
     hidden_size = 1024
     dropout = 0.5 #
@@ -30,8 +31,8 @@ class Config(object):
     batch_size = 32
     n_epochs = 5
     lr = 0.001
-    
-    def __init__(self, name_suffix=None, **kwargs):        
+
+    def __init__(self, name_suffix=None, **kwargs):
         ## overwrite values and set paths
         for key, value in kwargs.items():
             setattr(self, key, value)
@@ -46,7 +47,7 @@ class Config(object):
         self.weights_file = os.path.join(self.weights_path, "{0}.weight".format(self.name))
 
 class ConvolutionalModel(TfModel):
-    
+
     def add_placeholders(self):
         """Generates placeholder variables to represent the input tensors
 
@@ -71,6 +72,10 @@ class ConvolutionalModel(TfModel):
         (Don't change the variable names)
         """
         ### YOUR CODE HERE
+        self.input_placeholder = tf.placeholder(tf.float32, shape = [None, self.config.n_features])
+        self.labels_placeholder = tf.placeholder(tf.int32, shape = [None])
+        self.dropout_placeholder = tf.placeholder(tf.float32)
+        self.weight_decay_placeholder = tf.placeholder(tf.float32)
         ### END CODE
 
     def create_feed_dict(self, inputs_batch, labels_batch=None, weight_decay = 0, dropout=1):
@@ -96,22 +101,29 @@ class ConvolutionalModel(TfModel):
             feed_dict: dict, mapping from placeholders to values.
         """
         ### YOUR CODE HERE
+        feed_dict = {
+        self.input_placeholder: inputs_batch ,
+        self.dropout_placeholder: dropout ,
+        self.weight_decay_placeholder: weight_decay
+        }
+        if labels_batch is not None:
+            feed_dict[self.labels_placeholder] = labels_batch
         ### END CODE
         return feed_dict
 
     def add_prediction_op(self):
-        """Adds 2 layer convolution, 1-hidden-layer CNN:            
+        """Adds 2 layer convolution, 1-hidden-layer CNN:
             l1 = max_pool(Relu(conv(x, C1)))
             l2 = max_pool(Relu(conv(l1, C2)))
             f = flatten(c2) - make into  [-1, self.config.conv_output_size] shape
             h = Relu(fW + b3) - hidden layer
             h_drop = Dropout(h, dropout_rate) - use dropout
             pred = h_dropU + b4 - compute output layer
-                
+
         Note that we are not applying a softmax to pred. The softmax will instead be done in
         the add_loss_op function, which improves efficiency because we can use
         tf.nn.softmax_cross_entropy_with_logits. Also it saves us some code.
-        
+
         tf.reshape, and tf.nn.conv2d, tf.nn.max_pool should be vital for implementing the convolution layers.
 
         conv2d: tf.nn.conv2d
@@ -119,28 +131,28 @@ class ConvolutionalModel(TfModel):
            set padding='SAME' to keep the input size unchaged
            Strides, we match the convolution filter to all positions in the input thus set strides to [1, 1, 1, 1] accordingly.
 
-        max_pool: tf.nn.max_pool  
-            ksize height and width are defined in config.pool_sizes (we use quadratic poolings) 
+        max_pool: tf.nn.max_pool
+            ksize height and width are defined in config.pool_sizes (we use quadratic poolings)
             strides must be the same as ksize to tile the max pool filter non-overlapping
             So strides and ksize should be 1, pool_size_height, pool_size_width, 1
-            set padding='SAME' to keep the input size unchaged      
-           
+            set padding='SAME' to keep the input size unchaged
+
         Use tf.contrib.xavier_initializer to initialize Variablers C1, C2, W, U
         you can initialize bias b1, b2, b3, b4 with zeros
 
         Hint: Here are the dimensions of the various variables you will need to create
                     C1:    (first convolution) # conv_layers[0]
-                    b1:    (number of convolutions in first conv. layer, ) 
+                    b1:    (number of convolutions in first conv. layer, )
                     C2:    (second convolutional layer)
-                    b2:    (number of convolutions in second conv. layer, ) 
+                    b2:    (number of convolutions in second conv. layer, )
                     W:     (conv_output_size, hidden_layer)
                     b3:    (hidden_size,)
                     U:     (hidden_size, n_classes)
                     b4:    (n_classes,)
-        
-        Hint: Note that tf.nn.dropout takes the keep probability (1 - p_drop) as an argument. 
+
+        Hint: Note that tf.nn.dropout takes the keep probability (1 - p_drop) as an argument.
             The keep probability should be set to the value of self.dropout_placeholder
-        
+
 
         Add these placeholders to self as the instance variables (need them for weigth decay)
             self.W
@@ -154,8 +166,8 @@ class ConvolutionalModel(TfModel):
         x_image = tf.reshape(x, [-1, 28, 28, 1]) # (batchsize) inputs of 28 x 28 and 1 channel
         xavier_init = tf.contrib.layers.xavier_initializer()
 
-        ### YOUR CODE HERE                
-        ### END CODE        
+        ### YOUR CODE HERE
+        ### END CODE
         return pred
 
     def add_loss_op(self, pred):
@@ -166,7 +178,7 @@ class ConvolutionalModel(TfModel):
         Hint: You can use tf.nn.sparse_softmax_cross_entropy_with_logits to simplify your
                     implementation. You might find tf.reduce_mean useful.
 
-        You should compute 
+        You should compute
         loss = sum(softmax_loss) + self.weight_decay_placeholder * ((sum_{i,j} W_{i,j}^2)+(sum_{i,j} U_{i,j}^2))
         Where W are the weights for the hidden layer and into softmax
 
@@ -200,18 +212,20 @@ class ConvolutionalModel(TfModel):
             train_op: The Op for training.
         """
         ### YOUR CODE HERE
+        opt = tf.train.AdamOptimizer(self.config.lr)
+        train_op = opt.minimize(loss)
         ### END CODE
         return train_op
 
     def predict_labels_on_batch(self, session, inputs_batch):
         """ Make label predictions for the provided batch of data - helper function
-                        
+
         Should be similar to softmax predict from hand in 1
         Args:
                session: tf.Session()
                input_batch: np.ndarray of shape (n_samples, n_features)
         Returns:
-               predicted_labels: np.ndarray of shape (n_samples,)        
+               predicted_labels: np.ndarray of shape (n_samples,)
         """
         predicted_labels = None
         logits = self.predict_on_batch(session, inputs_batch)
@@ -219,6 +233,6 @@ class ConvolutionalModel(TfModel):
         predicted_labels =  session.run(predicted_labels_tensor)
         return predicted_labels
 
-                       
+
 if __name__=='__main__':
     print('DOOH')
