@@ -165,15 +165,13 @@ class FeedForwardModel(TfModel):
             loss: A 0-d tensor (scalar)
         """
         ### YOUR CODE HERE
-        loss = tf.reduce_mean(
-        tf.nn.sparse_softmax_cross_entropy_with_logits(logits=pred, labels=self.labels_placeholder))
-        reg = self.config.weight_decay * (tf.reduce_sum(tf.square(self.U)) + (tf.reduce_sum(tf.square(self.W))))
+
         ### END CODE
         return loss + reg
 
     def add_training_op(self, loss):
         """Sets up the training Ops.
-        alwih
+
         Creates an optimizer and applies the gradients to all trainable variables.
         The Op returned by this function is what must be passed to the
         `sess.run()` call to cause the model to train.
