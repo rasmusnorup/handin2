@@ -165,7 +165,6 @@ class FeedForwardModel(TfModel):
             loss: A 0-d tensor (scalar)
         """
         ### YOUR CODE HERE
-
         ### END CODE
         return loss + reg
 
